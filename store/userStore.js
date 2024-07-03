@@ -1,3 +1,5 @@
+import { userService } from "../services/user.service.js"
+
 const { createStore } = Redux
 
 export const SET_USER = 'SET_USER'

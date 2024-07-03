@@ -3,30 +3,34 @@ import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { loadTodos } from "../store/todo.actions.js"
+import { TOGGLE_IS_LOADING } from "../store/todoStore.js"
 
 const { useState, useEffect } = React
+const { useSelector, useDispatch } = ReactRedux
+
 const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
+    const dispatch = useDispatch()
 
-    const [todos, setTodos] = useState(null)
-
+    const todos = useSelector(state => state.todos)
+    const isLoading = useSelector(state => state.isLoading)
+    const filterBy = useSelector(state=> state.filterBy)
     // Special hook for accessing search-params:
+
     const [searchParams, setSearchParams] = useSearchParams()
-
-    const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
-
-    const [filterBy, setFilterBy] = useState(defaultFilter)
 
     useEffect(() => {
         setSearchParams(filterBy)
-        todoService.query(filterBy)
-            .then(todos => setTodos(todos))
-            .catch(err => {
-                console.eror('err:', err)
-                showErrorMsg('Cannot load todos')
+        loadTodos(filterBy)
+            .then(todos => {
+                showSuccessMsg('Todos loaded.')
+                dispatch({ type: TOGGLE_IS_LOADING, isLoading: false })
             })
+            .catch(err => showErrorMsg(`Error loading Todos... ${err}`))
     }, [filterBy])
+
 
     function onRemoveTodo(todoId) {
         todoService.remove(todoId)
@@ -45,7 +49,7 @@ export function TodoIndex() {
         todoService.save(todoToSave)
             .then((savedTodo) => {
                 setTodos(prevTodos => prevTodos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo }))
-                showSuccessMsg(`Todo is ${(savedTodo.isDone)? 'done' : 'back on your list'}`)
+                showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
             .catch(err => {
                 console.log('err:', err)
@@ -53,10 +57,10 @@ export function TodoIndex() {
             })
     }
 
-    if (!todos) return <div>Loading...</div>
+    if (isLoading) return <div>Loading...</div>
     return (
         <section className="todo-index">
-            <TodoFilter filterBy={filterBy} onSetFilterBy={setFilterBy} />
+            <TodoFilter/>
             <div>
                 <Link to="/todo/edit" className="btn" >Add Todo</Link>
             </div>
