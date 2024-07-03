@@ -1,4 +1,8 @@
 export function TodoPreview({ todo, onToggleTodo }) {
+    function onColorChange() {
+        
+    }
+
     return (
         <article className="todo-preview">
             <h2 className={(todo.isDone)? 'done' : ''} onClick={onToggleTodo}>
