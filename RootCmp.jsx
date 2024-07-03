@@ -17,7 +17,6 @@ import { Dashboard } from "./pages/Dashboard.jsx"
 export function RootCmp() {
 
     return <Provider store={store}>
-    {/* return <Provider userStore={userStore} todoStore={todoStore}> */}
         <Router>
             <section className="app main-layout">
                 <AppHeader />

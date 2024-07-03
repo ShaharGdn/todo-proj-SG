@@ -6,7 +6,7 @@ import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { loadTodos } from "../store/todo.actions.js"
 import { TOGGLE_IS_LOADING } from "../store/todoStore.js"
 
-const { useState, useEffect } = React
+const { useEffect } = React
 const { useSelector, useDispatch } = ReactRedux
 
 const { Link, useSearchParams } = ReactRouterDOM
@@ -16,19 +16,16 @@ export function TodoIndex() {
 
     const todos = useSelector(state => state.todos)
     const isLoading = useSelector(state => state.isLoading)
-    const filterBy = useSelector(state=> state.filterBy)
-    // Special hook for accessing search-params:
+    const filterBy = useSelector(state => state.filterBy)
 
     const [searchParams, setSearchParams] = useSearchParams()
 
     useEffect(() => {
         setSearchParams(filterBy)
         loadTodos(filterBy)
-            .then(todos => {
-                showSuccessMsg('Todos loaded.')
-                dispatch({ type: TOGGLE_IS_LOADING, isLoading: false })
-            })
+            .then(showSuccessMsg('Todos loaded.'))
             .catch(err => showErrorMsg(`Error loading Todos... ${err}`))
+            .finally(() => dispatch({ type: TOGGLE_IS_LOADING, isLoading: false }))
     }, [filterBy])
 
 
@@ -60,7 +57,7 @@ export function TodoIndex() {
     if (isLoading) return <div>Loading...</div>
     return (
         <section className="todo-index">
-            <TodoFilter/>
+            <TodoFilter />
             <div>
                 <Link to="/todo/edit" className="btn" >Add Todo</Link>
             </div>
