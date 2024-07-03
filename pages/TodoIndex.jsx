@@ -30,6 +30,8 @@ export function TodoIndex() {
 
 
     function onRemoveTodo(todoId) {
+        const removeConfirmed = confirm(`Do you wish to remove todo ${todoId}? This action is irreversible!`)
+        if (!removeConfirmed) return
         todoService.remove(todoId)
             .then(() => {
                 setTodos(prevTodos => prevTodos.filter(todo => todo._id !== todoId))
