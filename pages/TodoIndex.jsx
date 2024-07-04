@@ -13,7 +13,7 @@ const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
     const dispatch = useDispatch()
-
+    
     const todos = useSelector(state => state.todos)
     const isLoading = useSelector(state => state.isLoading)
     const filterBy = useSelector(state => state.filterBy)
@@ -63,11 +63,10 @@ export function TodoIndex() {
             .then((savedTodo) => {
                 const newTodos = todos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo })
                 dispatch({ type: SET_TODOS, todos: newTodos })
-                showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
             .catch(err => {
                 console.log('err:', err)
-                showErrorMsg('Cannot toggle todo ' + todoId)
+                showErrorMsg('Cannot update todo ' + todoId)
             })
     }
 

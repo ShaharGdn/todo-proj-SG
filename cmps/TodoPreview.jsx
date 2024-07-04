@@ -1,4 +1,5 @@
 export function TodoPreview({ todo, onToggleTodo, onUpdateTodo }) {
+    
     function onSetNoteColor({ target }) {
         const { value } = target
 

@@ -1,25 +1,17 @@
-const { useState, useEffect } = React
-const { useSelector, useDispatch } = ReactRedux
+const { useSelector } = ReactRedux
 const { Link, NavLink } = ReactRouterDOM
-const { useNavigate } = ReactRouter
 
 import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from './LoginSignup.jsx'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { logout } from '../store/user.actions.js'
-import { todoService } from "../services/todo.service.js"
 
 
 export function AppHeader() {
     var loggedinUser = useSelector(state => state.loggedinUser)
-    const [progressStats, setProgressStats] = useState()
-
-    useEffect(() => {
-        todoService.getProgressStats()
-            .then(setProgressStats)
-    }, [])
-    // const progressStats = todoService.getProgressStats().then
-    // console.log('progressStats:', progressStats)
+    const todos = useSelector(state => state.todos)
+    const totalTodos = todos.length
+    const doneTodos = todos.filter(todo=> todo.isDone == true).length
 
     function onLogout() {
         logout()
@@ -31,13 +23,12 @@ export function AppHeader() {
         <header className="app-header full main-layout">
             <section className="header-container">
                 <h1>React Todo App</h1>
-                {progressStats && <section className="progress-bar">
-                    Done Todo's: {progressStats}
-                </section>}
+                <progress className="progress-bar" value={doneTodos} max={totalTodos}>
+                </progress>
                 {loggedinUser ? (
                     < section >
 
-                        <Link to={`/user/${loggedinUser._id}`}>Hello {loggedinUser.fullname}</Link>
+                        <Link to={`/user/${loggedinUser._id}`}>Hello {loggedinUser.fullname} Balance {loggedinUser.balance}</Link>
                         <button onClick={onLogout}>Logout</button>
                     </ section >
                 ) : (
