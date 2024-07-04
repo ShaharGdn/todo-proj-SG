@@ -4,7 +4,7 @@ import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { loadTodos } from "../store/todo.actions.js"
-import { TOGGLE_IS_LOADING } from "../store/todoStore.js"
+import { SET_TODOS, TOGGLE_IS_LOADING } from "../store/todoStore.js"
 
 const { useEffect } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -34,7 +34,8 @@ export function TodoIndex() {
         if (!removeConfirmed) return
         todoService.remove(todoId)
             .then(() => {
-                setTodos(prevTodos => prevTodos.filter(todo => todo._id !== todoId))
+                const newTodos = todos.filter(todo => todo._id !== todoId)
+                dispatch({ type: SET_TODOS, todos: newTodos })
                 showSuccessMsg(`Todo removed`)
             })
             .catch(err => {
@@ -47,7 +48,21 @@ export function TodoIndex() {
         const todoToSave = { ...todo, isDone: !todo.isDone }
         todoService.save(todoToSave)
             .then((savedTodo) => {
-                setTodos(prevTodos => prevTodos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo }))
+                const newTodos = todos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo })
+                dispatch({ type: SET_TODOS, todos: newTodos })
+                showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
+            })
+            .catch(err => {
+                console.log('err:', err)
+                showErrorMsg('Cannot toggle todo ' + todoId)
+            })
+    }
+
+    function onUpdateTodo(todo) {
+        todoService.save(todo)
+            .then((savedTodo) => {
+                const newTodos = todos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo })
+                dispatch({ type: SET_TODOS, todos: newTodos })
                 showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
             .catch(err => {
@@ -64,7 +79,7 @@ export function TodoIndex() {
                 <Link to="/todo/edit" className="btn" >Add Todo</Link>
             </div>
             <h2>Todos List</h2>
-            <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} />
+            <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} onUpdateTodo={onUpdateTodo} />
             <hr />
             <h2>Todos Table</h2>
             <div style={{ width: '60%', margin: 'auto' }}>
