@@ -47,6 +47,14 @@ export function TodoFilter() {
                     type="number" placeholder="By Importance" id="importance" name="importance"
                 />
 
+                <label htmlFor="status">Status</label>
+                <select name="status" id="status" defaultValue={'select'} onChange={handleChange}>
+                    <option value="select">Select</option>
+                    <option value="all">All</option>
+                    <option value="active">Active</option>
+                    <option value="done">Done</option>
+                </select>
+
                 <button hidden>Set Filter</button>
             </form>
         </section>
