@@ -26,6 +26,11 @@ a.active {
     text-decoration: underline;
 }
 
+.header-container .progress-bar {
+    margin-inline-end: 1em;
+    margin-inline-start: 1em;
+}
+
 
 @media (max-width: 720px) {
     .app-header {

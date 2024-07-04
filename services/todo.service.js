@@ -13,12 +13,12 @@ export const todoService = {
     getDefaultFilter,
     getFilterFromSearchParams,
     getImportanceStats,
+    getProgressStats
 }
 // For Debug (easy access from console):
 window.cs = todoService
 
 function query(filterBy = {}) {
-    console.log('filterBy:', filterBy)
     return storageService.query(TODO_KEY)
         .then(todos => {
             if (filterBy.txt) {
@@ -92,10 +92,18 @@ function getImportanceStats() {
     return storageService.query(TODO_KEY)
         .then(todos => {
             const todoCountByImportanceMap = _getTodoCountByImportanceMap(todos)
-            const data = Object.keys(todoCountByImportanceMap).map(speedName => ({ title: speedName, value: todoCountByImportanceMap[speedName] }))
+            const data = Object.keys(todoCountByImportanceMap).map(importance => ({ title: importance, value: todoCountByImportanceMap[importance] }))
             return data
         })
+}
 
+function getProgressStats() {
+    return storageService.query(TODO_KEY)
+        .then(todos => {
+            const doneTodos = todos.filter(todo => todo.isDone === true)
+            const process = Math.ceil((doneTodos.length / todos.length) * 100)
+            return process + '%'
+        })
 }
 
 function _createTodos() {
