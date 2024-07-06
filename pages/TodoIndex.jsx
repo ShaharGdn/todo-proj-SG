@@ -3,8 +3,8 @@ import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
-import { loadTodos, updateUser } from "../store/todo.actions.js"
-import { SET_TODOS, SET_USER, TOGGLE_IS_LOADING } from "../store/todoStore.js"
+import { loadTodos, updateUserBalance, addActivity } from "../store/todo.actions.js"
+import { SET_TODOS, TOGGLE_IS_LOADING } from "../store/todoStore.js"
 
 const { useEffect } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -37,6 +37,7 @@ export function TodoIndex() {
             .then(() => {
                 const newTodos = todos.filter(todo => todo._id !== todoId)
                 dispatch({ type: SET_TODOS, todos: newTodos })
+                addActivity(loggedinUser._id, `removed todo - ${todoId}`)
                 showSuccessMsg(`Todo removed`)
             })
             .catch(err => {
@@ -46,7 +47,12 @@ export function TodoIndex() {
     }
 
     function onToggleTodo(todo) {
-        if (!todo.isDone) updateUser(loggedinUser._id, 10)
+        if (!todo.isDone) {
+            updateUserBalance(loggedinUser._id, 10)
+            addActivity(loggedinUser._id, `marked as done - ${todo._id}`)
+        } else {
+            addActivity(loggedinUser._id, `marked as undone - ${todo._id}`)
+        }
         const todoToSave = { ...todo, isDone: !todo.isDone }
         todoService.save(todoToSave)
             .then((savedTodo) => {
@@ -66,6 +72,7 @@ export function TodoIndex() {
                 const newTodos = todos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo })
                 console.log('newTodos:', newTodos)
                 dispatch({ type: SET_TODOS, todos: newTodos })
+                addActivity(loggedinUser._id, `updated todo - ${todo._id}`)
             })
             .catch(err => {
                 console.log('err:', err)

@@ -1,12 +1,14 @@
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { addActivity } from "../store/todo.actions.js"
 
 const { useState, useEffect } = React
 const { useNavigate, useParams } = ReactRouterDOM
+const { useSelector } = ReactRedux
 
 export function TodoEdit() {
-
     const [todoToEdit, setTodoToEdit] = useState(todoService.getEmptyTodo())
+    const loggedinUser = useSelector(state => state.loggedinUser)
     const navigate = useNavigate()
     const params = useParams()
 
@@ -46,6 +48,7 @@ export function TodoEdit() {
         todoService.save(todoToEdit)
             .then((savedTodo) => {
                 navigate('/todo')
+                addActivity(loggedinUser._id, `saved todo - ${savedTodo._id}`)
                 showSuccessMsg(`Todo Saved (id: ${savedTodo._id})`)
             })
             .catch(err => {

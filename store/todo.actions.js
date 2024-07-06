@@ -1,7 +1,7 @@
 import { todoService } from '../services/todo.service.js'
 import { userService } from '../services/user.service.js'
 // import { ADD_TODO, REMOVE_TODO, SET_TODOS, UPDATE_TODO, todoStore } from './todoStore.js'
-import { ADD_TODO, REMOVE_TODO, SET_TODOS, SET_USER, UPDATE_TODO, UPDATE_USER, store } from './todoStore.js'
+import { ADD_TODO, REMOVE_TODO, SET_TODOS, SET_USER, UPDATE_TODO, store } from './todoStore.js'
 
 export function loadTodos(filterBy = {}) {
     return todoService.query(filterBy)
@@ -14,12 +14,20 @@ export function saveTodo(todo) {
         .then(savedTodo => store.dispatch({ type, todo: savedTodo }))
 }
 
-export function updateUser(userId, diff) {
+export function updateUserBalance(userId, diff) {
     userService.updateUserBalance(userId, diff)
         .then(updatedUser => {
             store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
         })
 }
+
+export function addActivity(userId, txt) {
+    userService.addActivity(userId, txt)
+        .then(updatedUser => {
+            store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
+        })
+}
+
 
 // export function removeTodo(todoId) {
 //     return todoService.remove(todoId)
