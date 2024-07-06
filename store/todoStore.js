@@ -10,6 +10,7 @@ export const REMOVE_TODO = 'REMOVE_TODO'
 export const TOGGLE_IS_LOADING = 'TOGGLE_IS_LOADING'
 export const SET_FILTERBY = 'SET_FILTERBY'
 export const SET_USER = 'SET_USER'
+export const UPDATE_USER = 'UPDATE_USER'
 
 const initialState = {
     todos: [],

@@ -8,7 +8,8 @@ export const userService = {
     signup,
     getById,
     query,
-    getEmptyCredentials
+    getEmptyCredentials,
+    updateUserBalance
 }
 const STORAGE_KEY_LOGGEDIN = 'user'
 const STORAGE_KEY = 'userDB'
@@ -38,6 +39,16 @@ function signup({ username, password, fullname, balance, activities }) {
 
     return storageService.post(STORAGE_KEY, user)
         .then(_setLoggedinUser)
+}
+
+function updateUserBalance(userId, diff) {
+    return storageService.get(STORAGE_KEY, userId)
+        .then(userToUpdate => {
+            const updatedUser = { ...userToUpdate, balance: userToUpdate.balance + diff }
+            return storageService.put(STORAGE_KEY, updatedUser)
+            .then(_setLoggedinUser)
+        })
+
 }
 
 function logout() {

@@ -3,8 +3,8 @@ import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
-import { loadTodos } from "../store/todo.actions.js"
-import { SET_TODOS, TOGGLE_IS_LOADING } from "../store/todoStore.js"
+import { loadTodos, updateUser } from "../store/todo.actions.js"
+import { SET_TODOS, SET_USER, TOGGLE_IS_LOADING } from "../store/todoStore.js"
 
 const { useEffect } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -13,8 +13,9 @@ const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
     const dispatch = useDispatch()
-    
+
     const todos = useSelector(state => state.todos)
+    const loggedinUser = useSelector(state => state.loggedinUser)
     const isLoading = useSelector(state => state.isLoading)
     const filterBy = useSelector(state => state.filterBy)
 
@@ -45,6 +46,7 @@ export function TodoIndex() {
     }
 
     function onToggleTodo(todo) {
+        if (!todo.isDone) updateUser(loggedinUser._id, 10)
         const todoToSave = { ...todo, isDone: !todo.isDone }
         todoService.save(todoToSave)
             .then((savedTodo) => {
@@ -62,11 +64,12 @@ export function TodoIndex() {
         todoService.save(todo)
             .then((savedTodo) => {
                 const newTodos = todos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo })
+                console.log('newTodos:', newTodos)
                 dispatch({ type: SET_TODOS, todos: newTodos })
             })
             .catch(err => {
                 console.log('err:', err)
-                showErrorMsg('Cannot update todo ' + todoId)
+                showErrorMsg('Cannot update todo')
             })
     }
 

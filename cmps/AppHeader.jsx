@@ -1,5 +1,6 @@
 const { useSelector } = ReactRedux
 const { Link, NavLink } = ReactRouterDOM
+const { useEffect } = React
 
 import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from './LoginSignup.jsx'
@@ -12,6 +13,10 @@ export function AppHeader() {
     const todos = useSelector(state => state.todos)
     const totalTodos = todos.length
     const doneTodos = todos.filter(todo=> todo.isDone == true).length
+
+    // useEffect(()=> {
+    //     console.log('loggedinUser.balance:', loggedinUser.balance)
+    // }, [loggedinUser.balance])
 
     function onLogout() {
         logout()
@@ -27,7 +32,6 @@ export function AppHeader() {
                 </progress>
                 {loggedinUser ? (
                     < section >
-
                         <Link to={`/user/${loggedinUser._id}`}>Hello {loggedinUser.fullname} Balance {loggedinUser.balance}</Link>
                         <button onClick={onLogout}>Logout</button>
                     </ section >
