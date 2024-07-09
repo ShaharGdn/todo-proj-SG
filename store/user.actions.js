@@ -21,15 +21,15 @@ export function updateUserBalance(loggedinUser, diff, todoId) {
     const updatedUser = { ...loggedinUser, balance: loggedinUser.balance + diff }
     store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
     addActivity(`marked todo as done ${todoId}`, updatedUser)
-    userService.saveUser(updatedUser)
 }
 
-export function addActivity(txt, loggedinUser) {
+export function addActivity(txt, user) {
     const newActivity = { txt, at: Date.now() }
     const updatedUser = {
-        ...loggedinUser,
-        activities: [...loggedinUser.activities, newActivity]
+        ...user,
+        activities: [...user.activities, newActivity]
     }
-    store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
-    userService.saveUser(updatedUser)
+    userService.saveUser(updatedUser).then(savedUser => {
+        store.dispatch({ type: SET_USER, loggedinUser: savedUser })
+    })
 }

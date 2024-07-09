@@ -28,8 +28,8 @@ export function AppHeader() {
                 </progress>}
                 {loggedinUser ? (
                     < section >
-                        <Link to={`/user-details`}>Hello {loggedinUser.fullname} Balance {loggedinUser.balance}</Link>
-                        {/* <Link to={`/user/${loggedinUser._id}`}>Hello {loggedinUser.fullname} Balance {loggedinUser.balance}</Link> */}
+                        {/* <Link to={`/user-details`}>Hello {loggedinUser.fullname} Balance {loggedinUser.balance}</Link> */}
+                        <Link to={`/user/${loggedinUser._id}`}>Hello {loggedinUser.fullname} Balance {loggedinUser.balance}</Link>
                         <button onClick={onLogout}>Logout</button>
                     </ section >
                 ) : (
