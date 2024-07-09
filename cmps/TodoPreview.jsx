@@ -1,5 +1,5 @@
 export function TodoPreview({ todo, onToggleTodo, onUpdateTodo }) {
-    
+
     function onSetNoteColor({ target }) {
         const { value } = target
 
@@ -15,7 +15,7 @@ export function TodoPreview({ todo, onToggleTodo, onUpdateTodo }) {
             <h4>Todo Importance: {todo.importance}</h4>
             <img src={`../assets/img/${'todo'}.png`} alt="" />
             <label htmlFor="color">Note Color</label>
-            <input type="color" name="color" id="color" value={todo.color} onChange={onSetNoteColor} />
+            <input type="color" name="color" id="color" value={(todo.color) ? todo.color : '#00000'} onChange={onSetNoteColor} />
         </article>
     )
 }

@@ -38,7 +38,7 @@ function query(filterBy = {}) {
                 } else if (filterBy.status === 'all') {
                     return todos
                 } else if (filterBy.status === 'select') {
-                    return
+                    return todos
                 }
             }
 

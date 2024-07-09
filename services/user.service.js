@@ -9,8 +9,7 @@ export const userService = {
     getById,
     query,
     getEmptyCredentials,
-    updateUserBalance,
-    addActivity
+    saveUser
 }
 const STORAGE_KEY_LOGGEDIN = 'user'
 const STORAGE_KEY = 'userDB'
@@ -42,23 +41,28 @@ function signup({ username, password, fullname, balance, activities }) {
         .then(_setLoggedinUser)
 }
 
-function updateUserBalance(userId, diff) {
-    return storageService.get(STORAGE_KEY, userId)
-        .then(userToUpdate => {
-            const updatedUser = { ...userToUpdate, balance: userToUpdate.balance + diff }
-            return storageService.put(STORAGE_KEY, updatedUser)
-                .then(_setLoggedinUser)
-        })
-}
+// function updateUserBalance(userId, diff) {
+//     return storageService.get(STORAGE_KEY, userId)
+//         .then(userToUpdate => {
+//             const updatedUser = { ...userToUpdate, balance: userToUpdate.balance + diff }
+//             return storageService.put(STORAGE_KEY, updatedUser)
+//                 .then(_setLoggedinUser)
+//         })
+// }
 
-function addActivity(userId, txt) {
-    return storageService.get(STORAGE_KEY, userId)
-        .then(userToUpdate => {
-            const activity = { txt, at: new Date() }
-            userToUpdate.activities.push(activity)
-            return storageService.put(STORAGE_KEY, userToUpdate)
-                .then(_setLoggedinUser)
-        })
+// function addActivity(userId, txt) {
+//     return storageService.get(STORAGE_KEY, userId)
+//         .then(userToUpdate => {
+//             const activity = { txt, at: Date.now() }
+//             userToUpdate.activities.push(activity)
+//             return storageService.put(STORAGE_KEY, userToUpdate)
+//                 .then(_setLoggedinUser)
+//         })
+// }
+
+function saveUser(userToUpdate) {
+    return storageService.put(STORAGE_KEY, userToUpdate)
+        .then(_setLoggedinUser)
 }
 
 function logout() {

@@ -17,10 +17,19 @@ export function logout() {
         .then(() => store.dispatch({ type: SET_USER, loggedinUser: null }))
 }
 
-export function checkout(amount) {
-    return userService.updateScore(-amount)
-        .then(updatedScore => {
-            store.dispatch({ type: CLEAR_CART })
-            store.dispatch({ type: SET_USER_SCORE, score: updatedScore })
-        })
+export function updateUserBalance(loggedinUser, diff, todoId) {
+    const updatedUser = { ...loggedinUser, balance: loggedinUser.balance + diff }
+    store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
+    addActivity(`marked todo as done ${todoId}`, updatedUser)
+    userService.saveUser(updatedUser)
+}
+
+export function addActivity(txt, loggedinUser) {
+    const newActivity = { txt, at: Date.now() }
+    const updatedUser = {
+        ...loggedinUser,
+        activities: [...loggedinUser.activities, newActivity]
+    }
+    store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
+    userService.saveUser(updatedUser)
 }

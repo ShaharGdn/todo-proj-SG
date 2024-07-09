@@ -3,8 +3,9 @@ import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
-import { loadTodos, updateUserBalance, addActivity } from "../store/todo.actions.js"
-import { SET_TODOS, TOGGLE_IS_LOADING } from "../store/todoStore.js"
+import { loadTodos } from "../store/todo.actions.js"
+import { updateUserBalance, addActivity } from "../store/user.actions.js"
+import { SET_TODOS, SET_USER, TOGGLE_IS_LOADING } from "../store/todoStore.js"
 
 const { useEffect } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -37,7 +38,7 @@ export function TodoIndex() {
             .then(() => {
                 const newTodos = todos.filter(todo => todo._id !== todoId)
                 dispatch({ type: SET_TODOS, todos: newTodos })
-                addActivity(loggedinUser._id, `removed todo - ${todoId}`)
+                addActivity(`removed todo - ${todoId}`, loggedinUser)
                 showSuccessMsg(`Todo removed`)
             })
             .catch(err => {
@@ -48,10 +49,9 @@ export function TodoIndex() {
 
     function onToggleTodo(todo) {
         if (!todo.isDone) {
-            updateUserBalance(loggedinUser._id, 10)
-            addActivity(loggedinUser._id, `marked as done - ${todo._id}`)
+            updateUserBalance(loggedinUser, 10, todo._id)
         } else {
-            addActivity(loggedinUser._id, `marked as undone - ${todo._id}`)
+            addActivity(`marked as undone - ${todo._id}`, loggedinUser)
         }
         const todoToSave = { ...todo, isDone: !todo.isDone }
         todoService.save(todoToSave)
@@ -72,7 +72,7 @@ export function TodoIndex() {
                 const newTodos = todos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo })
                 console.log('newTodos:', newTodos)
                 dispatch({ type: SET_TODOS, todos: newTodos })
-                addActivity(loggedinUser._id, `updated todo - ${todo._id}`)
+                addActivity(`updated todo - ${todo._id}`, loggedinUser)
             })
             .catch(err => {
                 console.log('err:', err)

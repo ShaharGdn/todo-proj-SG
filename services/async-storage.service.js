@@ -35,7 +35,6 @@ function put(entityType, updatedEntity) {
         const entityToUpdate = {...entities[idx], ...updatedEntity}
         entities.splice(idx, 1, entityToUpdate)
         _save(entityType, entities)
-        console.log('entityToUpdate:', entityToUpdate)
         return entityToUpdate
     })
 }

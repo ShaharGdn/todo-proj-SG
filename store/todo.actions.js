@@ -14,21 +14,6 @@ export function saveTodo(todo) {
         .then(savedTodo => store.dispatch({ type, todo: savedTodo }))
 }
 
-export function updateUserBalance(userId, diff) {
-    userService.updateUserBalance(userId, diff)
-        .then(updatedUser => {
-            store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
-        })
-}
-
-export function addActivity(userId, txt) {
-    userService.addActivity(userId, txt)
-        .then(updatedUser => {
-            store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
-        })
-}
-
-
 // export function removeTodo(todoId) {
 //     return todoService.remove(todoId)
 //         .then(() => store.dispatch({ type: REMOVE_TODO, todoId }))
