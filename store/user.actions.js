@@ -17,6 +17,12 @@ export function logout() {
         .then(() => store.dispatch({ type: SET_USER, loggedinUser: null }))
 }
 
+export function updateUser(userToUpdate) {
+    userService.saveUser(userToUpdate).then(savedUser => {
+        store.dispatch({ type: SET_USER, loggedinUser: savedUser })
+    })
+}
+
 export function updateUserBalance(loggedinUser, diff, todoId) {
     const updatedUser = { ...loggedinUser, balance: loggedinUser.balance + diff }
     store.dispatch({ type: SET_USER, loggedinUser: updatedUser })
