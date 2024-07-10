@@ -9,29 +9,30 @@ const { useNavigate, useParams } = ReactRouterDOM
 const { useSelector, useDispatch } = ReactRedux
 
 export function UserDetails() {
-    // const loggedinUser = useSelector(state => state.loggedinUser)
-    const [user, setUser] = useState(null)
+    const loggedinUser = useSelector(state => state.loggedinUser)
+    // const [user, setUser] = useState(null)
+    if (!loggedinUser) return
 
     const params = useParams()
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const userId = params.userId
-        loadUser(userId)
-    }, [params.userId])
+    // useEffect(() => {
+    //     const userId = params.userId
+    //     loadUser(userId)
+    // }, [params.userId])
 
-    function loadUser(userId) {
-        userService.getById(userId)
-            .then(fetchedUser => {
-                setUser(fetchedUser)
-                showSuccessMsg('User loaded successfully')
-            })
-            .catch((err) => {
-                console.log('err:', err)
-                navigate('/todo')
-                showErrorMsg('Couldnt show user')
-            })
-    }
+    // function loadUser(userId) {
+    //     userService.getById(userId)
+    //         .then(fetchedUser => {
+    //             setUser(fetchedUser)
+    //             showSuccessMsg('User loaded successfully')
+    //         })
+    //         .catch((err) => {
+    //             console.log('err:', err)
+    //             navigate('/todo')
+    //             showErrorMsg('Couldnt show user')
+    //         })
+    // }
 
     function handleChange({ target }) {
         const { name, value, type } = target
@@ -39,26 +40,24 @@ export function UserDetails() {
 
         if (type === 'color') {
             updatedUser = {
-                ...user,
+                ...loggedinUser,
                 prefs: {
-                    ...user.prefs,
+                    ...loggedinUser.prefs,
                     [name]: value
                 }
             }
         } else {
             updatedUser = {
-                ...user,
+                ...loggedinUser,
                 [name]: value
             }
         }
-
         updateUser(updatedUser)
-        setUser(updatedUser)
+        // setUser(updatedUser)
     }
 
 
-    if (!user) return
-    const { balance, fullname, activities, prefs } = user
+    const { balance, fullname, activities, prefs } = loggedinUser
     const { color, bgColor } = prefs
 
     return (

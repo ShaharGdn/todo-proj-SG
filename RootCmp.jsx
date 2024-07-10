@@ -2,8 +2,7 @@ const Router = ReactRouterDOM.HashRouter
 const { Routes, Route } = ReactRouterDOM
 const { Provider } = ReactRedux
 
-import { userStore } from './store/userStore.js'
-import { store, todoStore } from './store/todoStore.js'
+import { store } from './store/todoStore.js'
 import { AppHeader } from "./cmps/AppHeader.jsx"
 import { Home } from "./pages/Home.jsx"
 import { About } from "./pages/About.jsx"
@@ -14,9 +13,9 @@ import { AboutTeam } from "./cmps/AboutTeam.jsx"
 import { AboutVision } from "./cmps/AboutVision.jsx"
 import { Dashboard } from "./pages/Dashboard.jsx"
 import { UserDetails } from './pages/UserDetails.jsx'
+import { Footer } from './cmps/Footer.jsx'
 
 export function RootCmp() {
-
     return <Provider store={store}>
         <Router>
             <section className="app main-layout">
@@ -34,9 +33,9 @@ export function RootCmp() {
                         <Route path="/todo" element={<TodoIndex />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/user/:userId" element={<UserDetails />} />
-
                     </Routes>
                 </main>
+                <Footer />
             </section>
         </Router>
     </Provider>
