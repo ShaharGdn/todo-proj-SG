@@ -59,7 +59,6 @@ export function UserDetails() {
 
     if (!user) return
     const { balance, fullname, activities, prefs } = user
-    console.log('prefs:', prefs)
     const { color, bgColor } = prefs
 
     return (
